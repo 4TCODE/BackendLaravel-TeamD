@@ -20,7 +20,7 @@
              {{-- categories --}}
             @if (auth()->user()->hasPermission('read_profiles'))
 
-            <li><a href="#"><i class="fa fa-th"></i><span>@lang('site.profile')</span></a></li>
+            <li><a href="{{ route('dashboard.user.profile') }}"><i class="fa fa-th"></i><span>@lang('site.profile')</span></a></li>
 
             @endif
 

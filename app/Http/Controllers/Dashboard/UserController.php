@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
 use App\Models\User;
 use Illuminate\View\View;
@@ -37,7 +37,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-    //    return $users = User::all();
+    //   return $users = User::all();
         // $users = User::whereRoleIs(['admin', 'regular-user'])->get();
        $users = User::whereHasRole('teacher')->where(function ($q) use ($request) {
 
@@ -65,30 +65,22 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        dd( $request->permissions);
+        // dd( $request->permissions);
         $request_data=$request->except(['password','password_confirmation','permissions']);
 
         $request_data['password']=bcrypt($request->password);
 
         if($request->image)
         {
-        //     Image::make($request->image)->resize(null, 200, function ($constraint) {
-        //         $constraint->aspectRatio();
-        //     })->save(public_path('uploads/user_images/'.$request->image->hashName()));
-
-        //    $request_data['image']=$request->image->hashName();
           $file_name=$this->saveImage($request->image,'uploads/user_images');
           $request_data['image']=  $file_name;
-
         }
-        // dd($user);
+
         $user=User::create($request_data);
 
         $user->addRole('teacher');
 
         $user->syncPermissions($request->permissions);
-
-      
 
     //    session()->flash('success', __('site.added_successfully'));
        return redirect()->route('dashboard.users.index')->with('success', __('site.added_successfully'));

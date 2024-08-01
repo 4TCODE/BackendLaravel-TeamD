@@ -3,11 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Notifications\Notifiable;
+use Laratrust\Traits\HasRolesAndPermissions;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Laratrust\Traits\HasRolesAndPermissions;
 
 class User extends Authenticatable implements MustVerifyEmail 
 {
@@ -61,4 +62,11 @@ class User extends Authenticatable implements MustVerifyEmail
             return asset('uploads/user_images/default.png');
         }
     }
+
+    //relation with profile one to one
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Profile::class, 'user_id', 'id')->withDefault();
+    }
+
 }

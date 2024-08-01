@@ -2,24 +2,24 @@
 
 use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Student\StudentController;
+use App\Http\Controllers\Dashboard\ProfileController;
+use App\Http\Controllers\Dashboard\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('student.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
 
 
 //dashboard routes
@@ -29,6 +29,12 @@ Route::middleware(['check.role'])->prefix('dashdoard')->name('dashboard.')->grou
 
      //userRoutes
     Route::resource('users',UserController::class)->except('show');
+
+    //user profile route
+    Route::get('user/profile', [ProfileController::class, 'edit'])->name('user.profile');
+
+    Route::patch('user/profile', [ProfileController::class, 'update'])->name('user.profile.update');
+   
 });
 
 
